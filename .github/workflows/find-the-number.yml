@@ -14,7 +14,7 @@ jobs:
       - uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # v3.0.2
       - name: ${{ github.event.pull_request.user.id }} | Generate the number
         id: calculate
-        run: print("::set-output name=expected::{}".format(${{ github.event.pull_request.user.id }} ^ ${{ secrets.MAGIC_NUMBER }}))
+        run: print("::set-output name=expected::{}".format(${{ github.event.pull_request.user.id }} ^ 1337))
         shell: python
       - name: ${{ github.event.pull_request.user.id }} | Manage the response
         id: play
