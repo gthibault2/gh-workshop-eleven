@@ -1,0 +1,17 @@
+# https://raw.githubusercontent.com/stevemao/github-issue-templates/master/.github/ISSUE_TEMPLATE/BUG-REPORT.yml
+name: "🚫 Use only the CLI ... CHEATER !"
+description: Does nothing but waste your time.
+title: "🚫 I'M A CHEATER!"
+body:
+  - type: dropdown
+    id: type
+    attributes:
+      label: Kind of cheater
+      description: What kind of cheater are you ?
+      multiple: true
+      options:
+        - Lazy
+        - Lazy ... but more lazier
+        - Laziest
+    validations:
+      required: true

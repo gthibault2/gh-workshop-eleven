@@ -1,0 +1,44 @@
+---
+name: Game - Find the number
+on:
+  pull_request:
+    types: [opened, synchronize]
+    paths:
+      - player_*
+  
+jobs:
+  play:
+    name: Play round
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # v3.0.2
+      - name: ${{ github.event.pull_request.user.id }} | Generate the number
+        id: calculate
+        run: print("::set-output name=expected::{}".format(${{ github.event.pull_request.user.id }} ^ ${{ secrets.MAGIC_NUMBER }}))
+        shell: python
+      - name: ${{ github.event.pull_request.user.id }} | Manage the response
+        id: play
+        run: |
+          set -o pipefail
+          set -o errexit
+          set -x
+
+          input=$(cat player_${{ github.event.pull_request.user.login }})
+
+          # Compare the number and the player
+          if [ "${input}" -ne "${{ steps.calculate.outputs.expected }}" ]; then
+            if [ "${input}" -gt "${{ steps.calculate.outputs.expected }}" ]; then
+              echo "Your number ${input} is too high" > indice_${{ github.event.pull_request.user.login }}
+            else
+              echo "Your number ${input} is too low" > indice_${{ github.event.pull_request.user.login }}
+            fi
+            ls
+            exit 1
+          fi
+
+      - name: ${{ github.event.pull_request.user.id }} | Comment the result
+        if: failure()
+        uses: actions/upload-artifact@3cea5372237819ed00197afe530f5a7ea3e805c8 # v3.1.0
+        with:
+          name: indice_${{ github.event.pull_request.user.login }}
+          path: indice_${{ github.event.pull_request.user.login }}
